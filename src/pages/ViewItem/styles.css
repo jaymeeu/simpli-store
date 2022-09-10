@@ -1,0 +1,212 @@
+
+.card{
+    box-shadow: 0 6px 6px rgba(#000, 0.3);
+    transition: 200ms;
+    background: #fff;
+    width: 100%;
+    max-width: 950px;
+    margin: 0 auto;
+}
+    .card__title{
+      display: flex;
+      align-items: center;
+      padding: 30px 40px;
+    }
+      
+     .card__title h3{
+        flex: 0 1 200px;
+        text-align: right;
+        margin: 0;
+        color: #252525;
+        font-family: sans-serif;
+        font-weight: 600;
+        font-size: 20px;
+        text-transform: uppercase;
+      }
+      
+      .card__title .icon{
+        flex: 1 0 10px;
+        background: var(--main);
+        color: #fff;
+        padding: 10px 10px;
+        transition: 200ms;
+        
+        
+      }
+      .icon a{
+        color: #fff;
+      }
+      
+      .icon:hover{
+        background: #252525;
+      }
+    
+    
+    .card__body{
+      padding: 0 40px;
+      display: flex;
+      flex-flow: row no-wrap;
+      margin-bottom: 25px;
+    }
+      .card__body .half{
+        box-sizing: border-box;
+        padding: 0 15px;
+        flex: 1 0 50%;
+      }
+
+      .card__body .other_half{
+        box-sizing: border-box;
+        padding: 0 15px;
+        flex: 1 0 50%;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        justify-content: space-between;
+      }
+      
+      
+      .featured_text h1{
+          margin: 0;
+          padding: 0;
+          font-weight: 800;
+          font-family: "Montserrat", sans-serif;
+          font-size: 64px;
+          line-height: 50px;
+          color: #181e28;
+        }
+        
+        .featured_text p{
+          margin: 0;
+          padding: 0;
+        }
+          .sub{
+            font-family: "Montserrat", sans-serif;
+            font-size: 26px;
+            text-transform: uppercase;
+            color: #686e77;
+            font-weight: 300;
+            margin-bottom: 5px;
+          }
+          
+          .price{
+            font-family: "Fjalla One", sans-serif;
+            color: #252525;
+            font-size: 26px;
+          }
+        
+      
+      
+      .image{
+        padding-top: 15px;
+        width: 100%;
+      }
+        .image img{
+          display: block;
+          max-width: 100%;
+          height: auto;
+        }
+      
+      .description{
+        margin-bottom: 25px;
+      }
+        
+        .description p{
+          margin: 0;
+          font-family: "Open Sans", sans-serif;
+          font-weight: 300;
+          line-height: 27px;
+          font-size: 16px;
+          color: #555;
+        }
+      
+      
+      .stock{
+        font-family: "Montserrat", sans-serif;
+        font-weight: 600;
+        color: #a1cc16;
+        margin-bottom: 15px;
+      }
+      
+      
+        .stars{
+          display: flex;
+          color: #f7c01b;
+          align-items: center;
+          gap: 1px;
+        }
+        
+          .stars  span{
+          font-family: "Open Sans", sans-serif;
+          font-size: 14px;
+          margin-left: 5px;
+          color: #555;
+        }
+      
+    
+    
+    .card__footer{
+      padding: 30px 0px;
+      display: flex;
+      flex-flow: row no-wrap;
+      align-items: center;
+      position: relative;
+    }
+      .card__footer::before{
+        content: "";
+        position: absolute;
+        display: block;
+        top: 0;
+        left: 0px;
+        width: 100%;
+        height: 3px;
+        background: var(--main);
+        background: linear-gradient(to right, var(--main) 0%,var(--main) 20%,#ddd 20%,#ddd 100%);
+      }
+      
+      .card__footer .recommend{
+        flex: 1 0 10px;
+      }
+       .recommend p{
+          margin: 0;
+          font-family: "Montserrat", sans-serif;
+          text-transform: uppercase;
+          font-weight: 600;
+          font-size: 14px;
+          color: #555;
+        }
+       
+        .recommend h3{
+          margin: 0;
+          font-size: 20px;
+          font-family: "Montserrat", sans-serif;
+          font-weight: 600;
+          text-transform: uppercase;
+          color: var(--main);
+        }
+      
+      
+      .action button{
+          cursor: pointer;
+          border: 1px solid var(--main);
+          padding: 14px 30px;
+          border-radius: 200px;
+          color: #fff;
+          background: var(--main);
+          font-family: "Open Sans", sans-serif;
+          font-size: 16px;
+          transition: 200ms;
+      }
+          .action button:hover{
+            background: #fff;
+            color: var(--main);
+          }
+
+          @media screen and (max-width : 850px) {
+            .card__body{
+              padding-top: 50px;
+              padding: 15px;
+              display: flex;
+              flex-direction: column;
+              margin-bottom: 25px;
+            }
+          }

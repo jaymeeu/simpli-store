@@ -1,0 +1,32 @@
+.iconButton{
+  display: flex;
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.galla_card{
+  width: 100%;
+  max-width: 200px;
+  height: 110px;
+  background: #FFFFFF;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 1px 7px rgba(207, 198, 198, 0.54);
+  border-radius: 10px;
+  flex-direction: column;
+  gap: 2px;
+  user-select: none;
+  cursor: pointer;
+}
+.galla_card span{
+  font-weight: 400;
+font-size: 12px;
+color: #848199;
+
+}
