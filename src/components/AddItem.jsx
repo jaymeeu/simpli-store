@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
 import { FiPlus } from 'react-icons/fi';
 import { MdOutlineCancel } from 'react-icons/md';
+import { Item } from '../models';
+import { DataStore, Storage } from 'aws-amplify';
 
 import Button from './Button';
 import IconButton from './IconButton/IconButton';
 
 import Input, { Textarea } from './Input';
+import { useAuthContext } from '../contexts/AuthContext';
 
 const AddItem = ({ close }) => {
+
     const [name, setName] = useState('')
     const [description, setdescription] = useState('')
     const [image, setimage] = useState('')
@@ -15,6 +19,8 @@ const AddItem = ({ close }) => {
 
     const [price, setPrice] = useState('')
     const [qty, setQty] = useState('')
+
+    const { sub } = useAuthContext()
 
     const re = /^[0-9\b]+$/;
     const changeQty = (e) => {
@@ -35,12 +41,35 @@ const AddItem = ({ close }) => {
     });
 
     const imageHandler = async (file) => {
+        setimagetosend(file.target.files[0])
         const my_image = await convert_to_base64(file.target.files[0]);
         setimage(my_image)
     }
 
-    const handleAddItem = () => {
+    function makeid(length) {
+        var result = '';
+        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var charactersLength = characters.length;
+        for (var i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() *
+                charactersLength));
+        }
+        return result;
+    }
 
+    const handleAddItem = async () => {
+
+        const fileName = makeid(20);
+        await Storage.put(fileName, imagetosend);
+
+        await DataStore.save(new Item({ name, description, price: parseFloat(price), quantity: parseInt(qty), image: fileName, userID: sub }))
+            .then((res) => {
+                console.log(res, "resresres")
+                close()
+            })
+            .catch((err) => {
+                console.log(err, "errerrerr")
+            })
     }
 
     return (
@@ -79,7 +108,7 @@ const AddItem = ({ close }) => {
                                     id="galleries"
                                     name="galleries"
                                     type="file"
-                                    accept="image/x-png,image/gif,image/jpeg"
+                                    accept="image/x-png,image/gif,image/jpeg,image/webp"
                                     onChange={imageHandler}
                                 />
                                 <label htmlFor="galleries" className="upload">
@@ -99,7 +128,7 @@ const AddItem = ({ close }) => {
                                     name="price"
                                     type="text"
                                     isRequired={true}
-                                    placeholder='Price'
+                                    placeholder='Price in naira'
                                 />
                                 <Input
                                     handleChange={changeQty}

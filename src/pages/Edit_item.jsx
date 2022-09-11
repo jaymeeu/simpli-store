@@ -1,11 +1,21 @@
 import React, { useState } from 'react'
+import { useEffect } from 'react'
 import { FiPlus } from 'react-icons/fi'
 import { MdOutlineCancel } from 'react-icons/md'
+import { useParams } from 'react-router-dom'
 import Button from '../components/Button'
 import IconButton from '../components/IconButton/IconButton'
 import Input, { Textarea } from '../components/Input'
+import {DataStore, Storage} from 'aws-amplify'
+import { Item } from '../models'
+import { useAuthContext } from '../contexts/AuthContext'
 
 const Edit_item = () => {
+
+    const {id} = useParams();
+    const {sub} = useAuthContext();
+
+    const [item, setItem] = useState(null)
 
     const [name, setName] = useState('')
     const [description, setdescription] = useState('')
@@ -14,6 +24,37 @@ const Edit_item = () => {
 
     const [price, setPrice] = useState('')
     const [qty, setQty] = useState('')
+
+
+    // useEffect(() => {
+    //   DataStore.query(Item, (item)=> item.id('eq', id) && item.userID('eq', sub)).then((res)=>{
+       
+    //     setItem(res[0])
+    //   })
+    // }, [])
+
+    useEffect(() => {
+        getItem()
+      }, [])
+    
+      const [images, setimages] = useState('')
+    
+      const getItem = async () => {
+        const itemInfo = await DataStore.query(Item, (item)=> item.id('eq', id) && item.userID('eq', sub))
+        setItem(itemInfo[0])
+          const image = await Storage.get(itemInfo[0].image)
+          setimages(image)
+      }
+
+
+    useEffect(() => {
+        setName(item?.name)
+        setdescription(item?.description)
+        setimage(images)
+        setPrice(item?.price)
+        setQty(item?.quantity)
+    }, [item])
+    
     
     const re = /^[0-9\b]+$/;
     const changeQty = (e) => {
@@ -36,13 +77,32 @@ const Edit_item = () => {
      
 
     const imageHandler = async (file) => {
+        setimagetosend(file.target.files[0])
         const my_image = await convert_to_base64(file.target.files[0]);
         setimage(my_image)
     }
 
     const handleUpdateItem = () =>{
-
+        DataStore.save(
+            Item.copyOf(item, (update) => {
+              update.name = name
+              update.description = description
+              update.price = parseFloat(price)
+              update.quantity = parseInt(qty)
+              update.image = image
+            }))
+            .then((res) => {
+              console.log(res)
+            })
+            .catch((err) => {
+              console.log("error", err)
+            })
     }
+
+    if(!item){
+        return <>Loading...</>
+    }
+
     return (
         <div className="m-5 md:m-10 mt-24 p-1 md:p-10 bg-white rounded-3xl">
 
@@ -69,7 +129,7 @@ const Edit_item = () => {
                                 id="galleries"
                                 name="galleries"
                                 type="file"
-                                accept="image/x-png,image/gif,image/jpeg"
+                                accept="image/x-png,image/gif,image/jpeg,image/webp"
                             onChange={imageHandler}
                             />
                             <label htmlFor="galleries" className="upload">
@@ -89,7 +149,7 @@ const Edit_item = () => {
                                     name="price"
                                     type="text"
                                     isRequired={true}
-                                    placeholder='Price'
+                                    placeholder='Price in naira'
                                 />
                                 <Input
                                     handleChange={changeQty}
@@ -122,7 +182,7 @@ const Edit_item = () => {
                         <Button
                             color="white"
                             bgColor='var(--main)'
-                            text="Add item"
+                            text="Update item"
                             borderRadius="10px"
                             width="full"
                             onClick={handleUpdateItem}

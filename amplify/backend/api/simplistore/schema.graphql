@@ -1,0 +1,22 @@
+type User @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  name: String!
+  description: String
+  email: String!
+  rating: Float
+  sub: String!
+  role: String!
+  storeName: String
+  Items: [Item] @hasMany(indexName: "byUser", fields: ["id"])
+}
+
+type Item @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  name: String!
+  description: String
+  price: Float!
+  quantity: Int!
+  image: String
+  userID: ID! @index(name: "byUser")
+}
+ 

@@ -1,0 +1,20 @@
+{
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-simplistore-staging-32626-authRole",
+      "UnauthRoleArn": "arn:aws:iam::457785053038:role/amplify-simplistore-staging-32626-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::457785053038:role/amplify-simplistore-staging-32626-authRole",
+      "Region": "eu-west-1",
+      "DeploymentBucketName": "amplify-simplistore-staging-32626-deployment",
+      "UnauthRoleName": "amplify-simplistore-staging-32626-unauthRole",
+      "StackName": "amplify-simplistore-staging-32626",
+      "StackId": "arn:aws:cloudformation:eu-west-1:457785053038:stack/amplify-simplistore-staging-32626/b113a310-2d93-11ed-9d06-06a8712a0137",
+      "AmplifyAppId": "dl91o82sch9av"
+    },
+    "categories": {
+      "auth": {
+        "simplistore": {}
+      }
+    }
+  }
+}

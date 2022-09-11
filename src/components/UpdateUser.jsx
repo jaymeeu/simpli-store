@@ -1,24 +1,72 @@
 import React, { useState } from 'react';
-import { FiPlus } from 'react-icons/fi';
 import { MdOutlineCancel } from 'react-icons/md';
-
+import { useAuthContext } from '../contexts/AuthContext';
+import { User } from "./../models";
+import {DataStore} from 'aws-amplify'
 import Button from './Button';
 
 import Input, { Select, Textarea } from './Input';
+import { useEffect } from 'react';
 
 const UpdateUser = ({ close, showClose }) => {
-    const [name, setName] = useState('')
-    const [description, setdescription] = useState('')
-    const [storeName, setStoreName] = useState('')
-    const [role, setRole] = useState('')
+    const { dbUser, setDbuser, sub, authUser} = useAuthContext()
 
+    const [name, setName] = useState(dbUser?.name || '')
+    const [email, setEmail] = useState(authUser?.attributes?.email)
+    const [description, setdescription] = useState(dbUser?.description || '')
+    const [storeName, setStoreName] = useState(dbUser?.storeName || '')
+    const [role, setRole] = useState(dbUser?.role || '')
 
-    const handleAddItem = () => {
+    useEffect(() => {
+        setEmail(authUser?.attributes?.email)
+    }, [authUser])
 
+    const createUser = () => {
+        DataStore.save(new User({ name, description, rating: parseFloat('2.5'), sub, role, storeName, email : authUser?.attributes?.email }))
+          .then((res) => {
+            // console.log(res)
+            // close()
+            setDbuser(res)
+          })
+          .catch((err) => {
+            console.log("error", err)
+          })
+      }
+    
+      //update user
+      const updateUser = () => {
+        DataStore.save(
+          User.copyOf(dbUser, (updated) => {
+            updated.name = name
+            updated.description = description
+            // updated.rating = parseFloat(rating)
+          }))
+          .then((res) => {
+            // console.log(res)
+            setDbuser(res)
+          })
+          .catch((err) => {
+            console.log("error", err)
+          })
+      }
+
+    const handleUpdateUser = (e) => {
+        //call close function on successfull update
+        e.preventDefault();
+
+        if (dbUser) {
+          updateUser()
+        }
+        else {
+          createUser()
+        }
     }
 
     return (
         <div className="h-screen  bg-half-transparent w-full fixed nav-item top-0 right-0 z-20 flex justify-center align-middle p-4 ">
+            {
+                console.log(authUser, "authUserauthUser")
+            }
             <div className="h-auto duration-1000 ease-in-out dark:text-gray-200 transition-all dark:bg-[#484B52] bg-white w-400 p-8">
                 <div className="flex justify-between items-center">
                     <p className="font-semibold text-lg">Update profile</p>
@@ -49,7 +97,23 @@ const UpdateUser = ({ close, showClose }) => {
                             isRequired={true}
                             placeholder='Fullname'
                         />
-                        <Select
+                        <Input
+                            handleChange={(e) => setEmail(e.target.value)}
+                            value={email}
+                            labelText='Email'
+                            labelFor="email"
+                            id="email"
+                            name="email"
+                            type="email"
+                            disabled={true}
+                            isRequired={true}
+                            placeholder='Email'
+                        />
+                        {
+                            dbUser?.sub ? 
+                            <></>
+                            :
+                            <Select
                             options={
                                 [
                                     { label: "Select how you want to operate", value: '' },
@@ -60,6 +124,9 @@ const UpdateUser = ({ close, showClose }) => {
                             handleChange={(e) => setRole(e.target.value)}
                             value={role}
                         />
+
+                        }
+                       
                         {
                             role === 'seller' &&
                             <>
@@ -98,9 +165,10 @@ const UpdateUser = ({ close, showClose }) => {
                             text="Update profile"
                             borderRadius="10px"
                             width="full"
-                            onClick={handleAddItem}
+                            onClick={handleUpdateUser}
                         />
                     </form>
+
                 </div>
             </div>
         </div>

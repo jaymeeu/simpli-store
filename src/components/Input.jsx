@@ -11,6 +11,7 @@ export default function Input({
     isRequired=false,
     placeholder,
     customClass,
+    disabled,
 }){
     return(
         <div className="mb-5">
@@ -26,6 +27,7 @@ export default function Input({
               required={isRequired}
               className={fixedInputClass+customClass}
               placeholder={placeholder}
+              disabled = {disabled}
             />
           </div>
     )

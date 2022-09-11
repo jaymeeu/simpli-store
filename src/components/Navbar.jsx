@@ -1,15 +1,19 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { AiOutlineMenu } from 'react-icons/ai';
 import { FiShoppingCart } from 'react-icons/fi';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 
-import avatar from '../data/avatar.jpg';
+import avatar from '../assets/avatar.webp';
 import Cart from '../components/Cart';
 import UserProfile from '../components/UserProfile'
 
 import { useStateContext } from '../contexts/ContextProvider';
+import { useAuthContext } from '../contexts/AuthContext';
 
 const Navbar = () => {
+  const  {dbUser} = useAuthContext()
+
+
     const NavButton = ({ customFunc, icon, color, dotColor }) => (
         <button
             type="button"
@@ -31,7 +35,10 @@ const Navbar = () => {
 
     return (
         <div className="flex justify-between items-center p-2 md:ml-6 md:mr-6 relative">
-            <p className='block md:hidden'>Logo here</p>
+            <p className='block md:hidden'>
+                <span className="font-bold " style={{color:'var(--main)'}}>Simpli</span>
+                <span className="font-semibold text-slate-500">Store</span>
+            </p>
             <div className='hidden md:block'>
                 <NavButton title="Menu" customFunc={handleActiveMenu} color='var(--main)' icon={<AiOutlineMenu />} />
             </div>
@@ -49,7 +56,7 @@ const Navbar = () => {
                     <p>
                         <span className="text-gray-400 text-14">Hello,</span>{' '}
                         <span className="text-gray-400 font-bold ml-1 text-14">
-                            James
+                            {dbUser?.name.split(" ")[0]}
                         </span>
                     </p>
                     <MdKeyboardArrowDown className="text-gray-400 text-14" />

@@ -2,13 +2,16 @@ import React from 'react';
 import { MdOutlineCancel } from 'react-icons/md';
 
 import  Button  from './Button';
-import { userProfileData } from '../data/dummy';
 import { useStateContext } from '../contexts/ContextProvider';
-import avatar from '../data/avatar.jpg';
+import avatar from '../assets/avatar.webp';
 import { useNavigate } from 'react-router-dom';
+import { useAuthContext } from '../contexts/AuthContext';
+import { Auth} from 'aws-amplify'
 
 const UserProfile = () => {
   const { handleClick } = useStateContext();
+
+  const  {dbUser} = useAuthContext()
 
   const navigate = useNavigate();
 
@@ -35,9 +38,9 @@ const UserProfile = () => {
           alt="user-profile"
         />
         <div>
-          <p className="font-semibold text-xl dark:text-gray-200"> Michael Roberts </p>
-          <p className="text-gray-500 text-sm dark:text-gray-400">  Administrator   </p>
-          <p className="text-gray-500 text-sm font-semibold dark:text-gray-400"> info@shop.com </p>
+          <p className="font-semibold text-xl dark:text-gray-200"> {dbUser?.name} </p>
+          <p className="text-gray-500 text-sm dark:text-gray-400">  {dbUser?.role}   </p>
+          <p className="text-gray-500 text-sm font-semibold dark:text-gray-400"> {dbUser?.email} </p>
         </div>
       </div>
       
@@ -48,6 +51,10 @@ const UserProfile = () => {
           text="Logout"
           borderRadius="10px"
           width="full"
+          onClick={() => {
+            navigate('/');
+            Auth.signOut()
+          }}
         />
       </div>
     </div>
