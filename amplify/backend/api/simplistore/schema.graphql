@@ -1,3 +1,22 @@
+type Order @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  buyer_id: String!
+  seller_id: String!
+  price: Float!
+  quantity: Int!
+  name: String!
+  image: String!
+  total: Float!
+  item_id: String!
+}
+
+type Cart @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  buyer_id: String!
+  quantity: Int!
+  item_id: String!
+}
+
 type User @model @auth(rules: [{allow: public}]) {
   id: ID!
   name: String!

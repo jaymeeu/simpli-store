@@ -4,16 +4,11 @@
     "apiName": "simplistore",
     "serviceName": "AppSync",
     "defaultAuthType": {
-      "mode": "AMAZON_COGNITO_USER_POOLS",
-      "cognitoUserPoolId": "authsimplistore"
+      "mode": "API_KEY",
+      "keyDescription": "api key description",
+      "expirationTime": 30
     },
     "additionalAuthTypes": [
-      {
-        "mode": "API_KEY",
-        "expirationTime": 14,
-        "apiKeyExpirationDate": "2022-09-25T17:27:38.238Z",
-        "keyDescription": ""
-      },
       {
         "mode": "AWS_IAM"
       }

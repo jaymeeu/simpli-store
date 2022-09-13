@@ -4,7 +4,7 @@ import { Order } from '../models'
 import { DataStore, Storage } from 'aws-amplify'
 import OrdersItem from '../components/OrdersItem'
 
-const SellerOrder = () => {
+const BuyerOrder = () => {
     const { sub } = useAuthContext()
 
     const [order_list, setorder_list] = useState(null)
@@ -14,7 +14,7 @@ const SellerOrder = () => {
     }, [])
 
     const getOrders = async () =>{
-        const myOrders =  (await DataStore.query(Order, (item) => item.seller_id('eq', sub))).sort((x, y) => new Date(y.createdAt) - new Date(x.createdAt))
+        const myOrders =  (await DataStore.query(Order, (item) => item.buyer_id('eq', sub))).sort((x, y) => new Date(y.createdAt) - new Date(x.createdAt))
         // console.log(myOrders,"mmmmm")
 
         const fetchOrdersImage = await Promise.all(
@@ -37,11 +37,11 @@ const SellerOrder = () => {
 
             <div className="bg-white">
                 <div className="mx-auto max-w-2xl py-4 px-4 sm:py-6 sm:px-6 lg:max-w-7xl lg:px-8">
-                    <h2 className="text-2xl font-bold tracking-tight text-gray-900">Orders</h2>
+                    <h2 className="text-2xl font-bold tracking-tight text-gray-900">Buyer cart</h2>
                         {
                             order_list.length === 0 ? 
                             <div className="font-medium text-xl text-slate-500 w-full h-40 flex justify-center items-center ">
-                                No order for you 😜🤔😜
+                                Cart is empty 😜🤔😜
                             </div>
                             :
                             order_list?.map((item, index) => (
@@ -56,4 +56,4 @@ const SellerOrder = () => {
     )
 }
 
-export default SellerOrder
+export default BuyerOrder

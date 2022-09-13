@@ -5,29 +5,54 @@ import { NavLink } from 'react-router-dom';
 import {AiOutlineHome, AiOutlineShoppingCart} from 'react-icons/ai';
 import { FiShoppingBag } from 'react-icons/fi';
 import { RiContactsLine } from 'react-icons/ri';
+import { useAuthContext } from '../../contexts/AuthContext';
 
 
 
 const BottomNav = () => {
 
-    const links =  [
-        {
-          name: 'home',
-          icon: <AiOutlineHome />,
-        },
-        {
-          name: 'my-store',
-          icon: <FiShoppingBag />,
-        },
-        {
-            name: 'orders',
-            icon: <AiOutlineShoppingCart />,
-          },
-        {
-          name: 'account-profile',
-          icon: <RiContactsLine />,
-        },
-      ];
+    const {dbUser}  = useAuthContext()
+
+    const links = 
+        dbUser?.role === 'seller' ?
+            [
+                {
+                name: 'home',
+                icon: <AiOutlineHome />,
+                },
+                {
+                name: 'my-store',
+                icon: <FiShoppingBag />,
+                },
+                {
+                    name: 'orders',
+                    icon: <AiOutlineShoppingCart />,
+                },
+                {
+                name: 'profile',
+                icon: <RiContactsLine />,
+                },
+            ]
+            :
+            [
+                {
+                name: 'home',
+                icon: <AiOutlineHome />,
+                },
+                {
+                name: 'my-orders',
+                icon: <FiShoppingBag />,
+                },
+                {
+                    name: 'cart',
+                    icon: <AiOutlineShoppingCart />,
+                },
+                {
+                name: 'profile',
+                icon: <RiContactsLine />,
+                },
+            ]
+     
 
     return (
         <div>

@@ -4,12 +4,47 @@ import { ModelInit, MutableModel, PersistentModelConstructor } from "@aws-amplif
 
 
 
+type OrderMetaData = {
+  readOnlyFields: 'createdAt' | 'updatedAt';
+}
+
+type CartMetaData = {
+  readOnlyFields: 'createdAt' | 'updatedAt';
+}
+
 type UserMetaData = {
   readOnlyFields: 'createdAt' | 'updatedAt';
 }
 
 type ItemMetaData = {
   readOnlyFields: 'createdAt' | 'updatedAt';
+}
+
+export declare class Order {
+  readonly id: string;
+  readonly buyer_id: string;
+  readonly seller_id: string;
+  readonly price: number;
+  readonly quantity: number;
+  readonly name: string;
+  readonly image: string;
+  readonly total: number;
+  readonly item_id: string;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+  constructor(init: ModelInit<Order, OrderMetaData>);
+  static copyOf(source: Order, mutator: (draft: MutableModel<Order, OrderMetaData>) => MutableModel<Order, OrderMetaData> | void): Order;
+}
+
+export declare class Cart {
+  readonly id: string;
+  readonly buyer_id: string;
+  readonly quantity: number;
+  readonly item_id: string;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+  constructor(init: ModelInit<Cart, CartMetaData>);
+  static copyOf(source: Cart, mutator: (draft: MutableModel<Cart, CartMetaData>) => MutableModel<Cart, CartMetaData> | void): Cart;
 }
 
 export declare class User {

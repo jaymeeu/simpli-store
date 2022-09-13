@@ -8,12 +8,19 @@ import {DataStore, Storage} from 'aws-amplify'
 import { useState } from 'react'
 import { useEffect } from 'react'
 import { PriceFormatter } from '../../utils/PriceFormatter'
+import { User } from '../../models'
+import { useAuthContext } from '../../contexts/AuthContext'
+import { Cart } from '../../models'
 
 const ViewItem = () => {
 
     const {id} = useParams();
 
+    const { sub } = useAuthContext()
+
+
     const [item, setItem] = useState(null)
+    const [seller, setSeller] = useState(null)
 
   const navigate = useNavigate()
 
@@ -32,7 +39,20 @@ const ViewItem = () => {
         setItem(itemInfo)
           const image = await Storage.get(itemInfo.image)
           setimages(image)
+
+          const sellerInfo = await DataStore.query(User, (user)=> user.sub('eq', itemInfo.userID))
+          setSeller(sellerInfo[0])
       }
+
+      const addToCart = async () => {
+        await DataStore.save(new Cart({ buyer_id : sub, quantity: 1, item_id: item.id }))
+            .then((res) => {
+                console.log(res, "resresres")
+            })
+            .catch((err) => {
+                console.log(err, "errerrerr")
+            })
+    }
 
     if(!item){
         return <>Loading...</>
@@ -52,12 +72,12 @@ const ViewItem = () => {
                 <div className="card__body">
                     <div className="half">
                         <div className="featured_text">
-                            <h1>{item?.name}</h1>
+                            <h1 style={{fontSize:'32px'}}>{item?.name}</h1>
                             {/* <p className="sub">Office Chair</p> */}
                             <p className="price">&#8358;{PriceFormatter(item?.price)}</p>
                         </div>
                         <div className="image">
-                            <img src={images} alt="" />
+                            <img src={images} style={{maxWidth:'250px'}} alt="" />
                         </div>
                     </div>
                     <div className="other_half">
@@ -80,11 +100,11 @@ const ViewItem = () => {
                         </div>
                         <div className="card__footer">
                             <div className="recommend">
-                                <p>Recommended by</p>
-                                <h3>Andrew Palmer</h3>
+                                <p>Added by</p>
+                                <h3>{seller?.storeName}</h3>
                             </div>
                             <div className="action">
-                                <button type="button">Add to cart</button>
+                                <button type="button" onClick={addToCart}>Add to cart</button>
                             </div>
                         </div>
                     </div>

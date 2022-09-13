@@ -1,12 +1,5 @@
 {
   "AppSyncApiName": "simplistore",
   "DynamoDBBillingMode": "PAY_PER_REQUEST",
-  "DynamoDBEnableServerSideEncryption": false,
-  "AuthCognitoUserPoolId": {
-    "Fn::GetAtt": [
-      "authsimplistore",
-      "Outputs.UserPoolId"
-    ]
-  },
-  "AuthModeLastUpdated": "2022-09-11T17:27:40.228Z"
+  "DynamoDBEnableServerSideEncryption": false
 }

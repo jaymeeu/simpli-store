@@ -6,6 +6,8 @@
     width: 100%;
     max-width: 950px;
     margin: 0 auto;
+    padding-bottom: 40px;
+
 }
     .card__title{
       display: flex;
@@ -30,8 +32,6 @@
         color: #fff;
         padding: 10px 10px;
         transition: 200ms;
-        
-        
       }
       .icon a{
         color: #fff;
@@ -203,11 +203,17 @@
           }
 
           @media screen and (max-width : 850px) {
+            .card{
+              padding-bottom: 80px;
+            }
             .card__body{
               padding-top: 50px;
               padding: 15px;
               display: flex;
               flex-direction: column;
               margin-bottom: 25px;
+            }
+            .card__title{
+              padding: 80px 20px 0;
             }
           }

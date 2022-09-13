@@ -7,11 +7,12 @@ import { useStateContext } from '../contexts/ContextProvider';
 import { AiFillHome, AiOutlineHome, AiOutlineShoppingCart} from 'react-icons/ai';
 import { FiShoppingBag } from 'react-icons/fi';
 import { RiContactsLine } from 'react-icons/ri';
+import { useAuthContext } from '../contexts/AuthContext';
 
 
 const Sidebar = () => {
 
-  const { activeMenu, setActiveMenu } = useStateContext();
+  const { activeMenu } = useStateContext();
 
   const handleCloseSideBar = () => {
     if (activeMenu !== undefined) {
@@ -21,7 +22,11 @@ const Sidebar = () => {
   const activeLink = 'flex items-center gap-5 pl-4 pt-3 pb-2.5 rounded-lg  text-gray-200  text-md m-2';
   const normalLink = 'flex items-center gap-5 pl-4 pt-3 pb-2.5 rounded-lg text-md text-gray-700 dark:text-gray-200 dark:hover:text-black hover:bg-light-gray m-2';
 
-  const links =  [
+  const {dbUser}  = useAuthContext()
+
+    const links = 
+        dbUser?.role === 'seller' ?
+        [
         {
           name: 'home',
           icon: <AiOutlineHome />,
@@ -35,10 +40,29 @@ const Sidebar = () => {
             icon: <AiOutlineShoppingCart />,
           },
         {
-          name: 'account-profile',
+          name: 'profile',
           icon: <RiContactsLine />,
         },
-      ];
+      ]
+      :
+        [
+            {
+            name: 'home',
+            icon: <AiOutlineHome />,
+            },
+            {
+            name: 'my-orders',
+            icon: <FiShoppingBag />,
+            },
+            {
+                name: 'cart',
+                icon: <AiOutlineShoppingCart />,
+            },
+            {
+            name: 'profile',
+            icon: <RiContactsLine />,
+            },
+        ]
 
   return (
     // <div className='block sm:hidden'>
@@ -54,6 +78,7 @@ const Sidebar = () => {
               <div>
                 
                 {links.map((link) => (
+                    
                   <NavLink
                     to={`/${link.name}`}
                     key={link.name}

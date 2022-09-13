@@ -60,6 +60,7 @@ const AddItem = ({ close }) => {
     const handleAddItem = async () => {
 
         const fileName = makeid(20);
+        
         await Storage.put(fileName, imagetosend);
 
         await DataStore.save(new Item({ name, description, price: parseFloat(price), quantity: parseInt(qty), image: fileName, userID: sub }))

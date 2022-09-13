@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useEffect } from 'react'
 import { FiPlus } from 'react-icons/fi'
 import { MdOutlineCancel } from 'react-icons/md'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import Button from '../components/Button'
 import IconButton from '../components/IconButton/IconButton'
 import Input, { Textarea } from '../components/Input'
@@ -14,12 +14,13 @@ const Edit_item = () => {
 
     const {id} = useParams();
     const {sub} = useAuthContext();
-
+const navigate  = useNavigate()
     const [item, setItem] = useState(null)
 
     const [name, setName] = useState('')
     const [description, setdescription] = useState('')
     const [image, setimage] = useState('')
+    const [img_ref, setimg_ref] = useState('')
     const [imagetosend, setimagetosend] = useState('')
 
     const [price, setPrice] = useState('')
@@ -37,22 +38,25 @@ const Edit_item = () => {
         getItem()
       }, [])
     
-      const [images, setimages] = useState('')
+      const [defaultimage, setdefaultimage] = useState('')
     
       const getItem = async () => {
         const itemInfo = await DataStore.query(Item, (item)=> item.id('eq', id) && item.userID('eq', sub))
         setItem(itemInfo[0])
+        // console.log(itemInfo[0])
           const image = await Storage.get(itemInfo[0].image)
-          setimages(image)
+          setimage(image)
+        setdefaultimage(image)
+
       }
 
 
     useEffect(() => {
         setName(item?.name)
         setdescription(item?.description)
-        setimage(images)
         setPrice(item?.price)
         setQty(item?.quantity)
+        setimg_ref(item?.image)
     }, [item])
     
     
@@ -69,7 +73,6 @@ const Edit_item = () => {
     }
 
     const convert_to_base64 = file => new Promise((response) => {
-
         const file_reader = new FileReader();
         file_reader.readAsDataURL(file);
         file_reader.onload = () => response(file_reader.result);
@@ -77,22 +80,27 @@ const Edit_item = () => {
      
 
     const imageHandler = async (file) => {
-        setimagetosend(file.target.files[0])
+        setimagetosend(file.target.files)
         const my_image = await convert_to_base64(file.target.files[0]);
         setimage(my_image)
     }
 
-    const handleUpdateItem = () =>{
+    const handleUpdateItem = async () =>{
+        if(defaultimage !== image && imagetosend.length === 1){
+            console.log(img_ref,"hghhhh")
+            await Storage.put(img_ref, imagetosend[0]);
+        }
         DataStore.save(
             Item.copyOf(item, (update) => {
               update.name = name
               update.description = description
               update.price = parseFloat(price)
               update.quantity = parseInt(qty)
-              update.image = image
+            //   update.image = image
             }))
             .then((res) => {
               console.log(res)
+              navigate(-1)
             })
             .catch((err) => {
               console.log("error", err)

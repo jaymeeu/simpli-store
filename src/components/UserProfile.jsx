@@ -29,7 +29,7 @@ const UserProfile = () => {
         />
       </div>
       <div
-        onClick={() => {handleClick('userProfile'); navigate('/account-profile') }}
+        onClick={() => {handleClick('userProfile'); navigate('/profile') }}
         className="flex gap-5 items-center mt-6 border-color border-b-1 pb-6 cursor-pointer"
        >
         <img
@@ -52,6 +52,7 @@ const UserProfile = () => {
           borderRadius="10px"
           width="full"
           onClick={() => {
+            handleClick('userProfile')
             navigate('/');
             Auth.signOut()
           }}

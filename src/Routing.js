@@ -4,6 +4,8 @@ import BottomNav from './components/BottomNav'
 import Navbar from './components/Navbar'
 import Sidebar from './components/Sidebar'
 import { useStateContext } from './contexts/ContextProvider'
+import BuyerCart from './pages/BuyerCart'
+import BuyerOrder from './pages/BuyerOrder'
 import Dashboard from './pages/Dashboard'
 import Edit_item from './pages/Edit_item'
 import Order from './pages/Order'
@@ -49,8 +51,10 @@ const Routing = () => {
                   <Route path="/" element={(<Dashboard />)} />
                   <Route path="/home" element={(<Dashboard />)} />
                   <Route path="/my-store" element={(<Shop />)} />
+                  <Route path="/my-orders" element={(<BuyerOrder />)} />
+                  <Route path="/cart" element={(<BuyerCart/>)} />
                   <Route path="/orders" element={(<Order />)} />
-                  <Route path="/account-profile" element={(<Profile />)} />
+                  <Route path="/profile" element={(<Profile />)} />
                   <Route path="/item/:id" element={(<ViewItem />)} />
                   <Route path="/edit/:id" element={(<Edit_item />)} />
                 </Routes>
