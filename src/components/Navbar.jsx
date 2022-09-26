@@ -2,8 +2,8 @@ import React from 'react';
 import { AiOutlineMenu } from 'react-icons/ai';
 import { FiShoppingCart } from 'react-icons/fi';
 import { MdKeyboardArrowDown } from 'react-icons/md';
+import {FaUserCircle} from 'react-icons/fa'
 
-import avatar from '../assets/avatar.webp';
 import Cart from '../components/Cart';
 import UserProfile from '../components/UserProfile'
 
@@ -49,11 +49,7 @@ const Navbar = () => {
                     className="flex items-center gap-2 cursor-pointer p-1 hover:bg-light-gray rounded-lg"
                     onClick={() => handleClick('userProfile')}
                 >
-                    <img
-                        className="rounded-full w-8 h-8"
-                        src={avatar}
-                        alt="user-profile"
-                    />
+                    <FaUserCircle size={24} color="var(--main)"/>
                     <p>
                         <span className="text-gray-400 text-14">Hello,</span>{' '}
                         <span className="text-gray-400 font-bold ml-1 text-14">
