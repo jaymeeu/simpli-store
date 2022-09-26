@@ -14,7 +14,6 @@ import OrderComp from './OrderComp';
 const Navbar = () => {
   const  {dbUser} = useAuthContext()
 
-
     const NavButton = ({ customFunc, icon, color, dotColor }) => (
         <button
             type="button"

@@ -45,6 +45,7 @@ const UpdateUser = ({ close, showClose }) => {
       const updateUser = () => {
         DataStore.save(
           User.copyOf(dbUser, (updated) => {
+            updated.name = name
             updated.storeName = storeName
             updated.description = description
           }))
