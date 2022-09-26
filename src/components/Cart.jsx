@@ -1,40 +1,55 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { MdOutlineCancel } from 'react-icons/md';
-import { AiOutlinePlus, AiOutlineMinus } from 'react-icons/ai';
 
 import { useStateContext } from '../contexts/ContextProvider';
 import Button  from './Button';
 
-import product5 from './../data/product5.jpg';
-import product6 from './../data/product6.jpg';
-import product7 from './../data/product7.jpg';
+import CartItem from './CartItem';
+import { useAuthContext } from '../contexts/AuthContext';
+import {DataStore} from 'aws-amplify'
+import { Item } from '../models';
 
 const Cart = () => {
-  const cartData = [
-    {
-      image:
-        product5,
-      name: 'butterscotch ice-cream',
-      category: 'Milk product',
-      price: '$250',
-    },
-    {
-      image:
-        product6,
-      name: 'Supreme fresh tomato',
-      category: 'Vegetable Item',
-      price: '$450',
-    },
-    {
-      image:
-        product7,
-      name: 'Red color candy',
-      category: 'Food Item',
-      price: '$190',
-    },
-  ];
+  const { sub } = useAuthContext()
+    const [cart_list, setCart_list] = useState(null)
+    const [refresh, setrefresh] = useState(false)
+    useEffect(() => {
+        getAllItems()
+    }, [refresh])
 
-  const { handleClick } = useStateContext();
+    const getAllItems = async () => {
+
+        //get all my items in cart table
+        const myCartItems =  (await DataStore.query(Cart, (item) => item.buyer_id('eq', sub))).sort((x, y) => new Date(y.createdAt) - new Date(x.createdAt))
+
+        //get cart items information from Item table and add cartid to each response
+        const fetchItems = await Promise.all(
+            JSON.parse(JSON.stringify(myCartItems))
+            .map(async cart => {
+                const eachQuery = await Promise.all(
+                    JSON.parse(JSON.stringify(
+                        await DataStore.query(Item, (item) => item.id('eq', cart.item_id))
+                    ))
+                )
+                eachQuery[0].cartID = cart.id;
+
+            return eachQuery[0]
+        }))
+
+        //get cart items image from s3 bucket
+        const fetchItemsImage = await Promise.all(
+            JSON.parse(JSON.stringify(fetchItems))
+            .map(async cart => {
+                const image = await Storage.get(cart.image)
+                cart.S3image = image
+            return cart
+        }))
+
+        setCart_list(fetchItemsImage)
+    }
+
+    const { handleClick } = useStateContext();
+
 
   return (
     <div className="bg-half-transparent w-full fixed nav-item top-0 right-0 z-20">
@@ -50,46 +65,23 @@ const Cart = () => {
             borderRadius="50%"
           />
         </div>
-        {cartData?.map((item, index) => (
-          <div key={index}>
-            <div>
-              <div className="flex items-center   leading-8 gap-5 border-b-1 border-color dark:border-gray-600 p-4">
-                <img className="rounded-lg h-24 w-24" src={item.image} alt="" />
-                <div>
-                  <p className="font-semibold ">{item.name}</p>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm font-semibold">{item.category}</p>
-                  <div className="flex gap-4 mt-2 items-center">
-                    <p className="font-semibold text-lg">{item.price}</p>
-                    <div className="flex items-center border-1 border-r-0 border-color rounded">
-                      <p className="p-2 border-r-1 dark:border-gray-600 border-color text-red-600 "><AiOutlineMinus /></p>
-                      <p className="p-2 border-r-1 border-color dark:border-gray-600 text-green-600">0</p>
-                      <p className="p-2 border-r-1 border-color dark:border-gray-600 text-green-600"><AiOutlinePlus /></p>
-                    </div>
-                  </div>
-                </div>
-              </div>
+        {
+            !cart_list ?
+            <div className="font-medium text-xl text-slate-500 w-full h-40 flex justify-center items-center ">
+                Loading... 😜🤔😜
             </div>
-          </div>
-        ))}
-        <div className="mt-3 mb-3">
-          <div className="flex justify-between items-center">
-            <p className="text-gray-500 dark:text-gray-200">Sub Total</p>
-            <p className="font-semibold">$890</p>
-          </div>
-          <div className="flex justify-between items-center mt-3">
-            <p className="text-gray-500 dark:text-gray-200">Total</p>
-            <p className="font-semibold">$890</p>
-          </div>
-        </div>
-        <div className="mt-5">
-          <Button
-            color="white"
-            bgColor='var(--main)'
-            text="Place Order"
-            borderRadius="10px"
-            width="full"
-          />
-        </div>
+            :
+            cart_list?.length === 0 ? 
+            <div className="font-medium text-xl text-slate-500 w-full h-40 flex justify-center items-center ">
+                Cart is empty 😜🤔😜
+            </div>
+            :
+            cart_list?.map((item, index) => (
+                <div key={index}>
+                    <CartItem item={item} onsuccess={()=>setrefresh(!refresh)}/>
+                </div>
+            ))
+        }
       </div>
     </div>
   );

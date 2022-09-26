@@ -15,8 +15,7 @@ const BuyerOrder = () => {
 
     const getOrders = async () =>{
         const myOrders =  (await DataStore.query(Order, (item) => item.buyer_id('eq', sub))).sort((x, y) => new Date(y.createdAt) - new Date(x.createdAt))
-        // console.log(myOrders,"mmmmm")
-
+       
         const fetchOrdersImage = await Promise.all(
             JSON.parse(JSON.stringify(myOrders))
             .map(async order => {

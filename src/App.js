@@ -14,10 +14,9 @@ const App = () => {
 
   return (
     <div>
-    <AuthContextProvider >
-
-     <Routing/>
-     </AuthContextProvider>
+      <AuthContextProvider >
+        <Routing/>
+      </AuthContextProvider>
     </div>
   )
 }

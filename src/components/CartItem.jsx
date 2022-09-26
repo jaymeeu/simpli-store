@@ -45,8 +45,6 @@ const CartItem = ({ item, onsuccess }) => {
             item_id: item.id
         }))
             .then(async (res) => {
-                console.log(res, "add response")
-
                 const todelete = await DataStore.query(Cart, item.cartID);
                 DataStore.delete(todelete)
                     .then(async (res) => {

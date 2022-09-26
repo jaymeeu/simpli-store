@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
 import { MdOutlineCancel } from 'react-icons/md';
 import { useAuthContext } from '../contexts/AuthContext';
 import { User } from "./../models";
@@ -6,7 +6,6 @@ import {DataStore} from 'aws-amplify'
 import Button from './Button';
 
 import Input, { Select, Textarea } from './Input';
-import { useEffect } from 'react';
 
 const UpdateUser = ({ close, showClose }) => {
     const { dbUser, setDbuser, sub, authUser} = useAuthContext()
@@ -19,31 +18,39 @@ const UpdateUser = ({ close, showClose }) => {
 
     useEffect(() => {
         setEmail(authUser?.attributes?.email)
+
+        console.log(authUser,"authUser")
     }, [authUser])
 
+    // create new user
     const createUser = () => {
-        DataStore.save(new User({ name, description, rating: parseFloat('2.5'), sub, role, storeName, email : authUser?.attributes?.email }))
-          .then((res) => {
-            // console.log(res)
-            // close()
+        DataStore.save(new User({ 
+            name, 
+            description, 
+            sub, 
+            role, 
+            storeName, 
+            email : authUser?.attributes?.email 
+        }))          
+.then((res) => {
             setDbuser(res)
+            close()
           })
           .catch((err) => {
             console.log("error", err)
           })
       }
-    
+
       //update user
       const updateUser = () => {
         DataStore.save(
           User.copyOf(dbUser, (updated) => {
-            updated.name = name
+            updated.storeName = storeName
             updated.description = description
-            // updated.rating = parseFloat(rating)
           }))
           .then((res) => {
-            // console.log(res)
             setDbuser(res)
+            close()
           })
           .catch((err) => {
             console.log("error", err)
@@ -51,23 +58,21 @@ const UpdateUser = ({ close, showClose }) => {
       }
 
     const handleUpdateUser = (e) => {
-        //call close function on successfull update
         e.preventDefault();
-
-        if (dbUser) {
-          updateUser()
+        if(name !== "" & email !== "" & role !== ""){
+            if (dbUser) {
+                updateUser()
+              }
+              else {
+                createUser()
+              }
         }
-        else {
-          createUser()
-        }
+      
     }
 
-    return (
+  return (
         <div className="h-screen  bg-half-transparent w-full fixed nav-item top-0 right-0 z-20 flex justify-center align-middle p-4 ">
-            {
-                console.log(authUser, "authUserauthUser")
-            }
-            <div className="h-auto duration-1000 ease-in-out dark:text-gray-200 transition-all dark:bg-[#484B52] bg-white w-400 p-8">
+              <div className="h-auto duration-1000 ease-in-out transition-all bg-white w-400 p-8">
                 <div className="flex justify-between items-center">
                     <p className="font-semibold text-lg">Update profile</p>
                     {
@@ -82,10 +87,8 @@ const UpdateUser = ({ close, showClose }) => {
                         />
                     }
                 </div>
-
-                <div className="py-4 sm:py-6">
+              <div className="py-4 sm:py-6">
                     <form className="m-auto mt-8 max-w-xl">
-
                         <Input
                             handleChange={(e) => setName(e.target.value)}
                             value={name}
@@ -95,6 +98,7 @@ const UpdateUser = ({ close, showClose }) => {
                             name="name"
                             type="text"
                             isRequired={true}
+                            // disabled={true}
                             placeholder='Fullname'
                         />
                         <Input
@@ -126,7 +130,7 @@ const UpdateUser = ({ close, showClose }) => {
                         />
 
                         }
-                       
+
                         {
                             role === 'seller' &&
                             <>
@@ -157,8 +161,6 @@ const UpdateUser = ({ close, showClose }) => {
                             </>
                         }
 
-
-
                         <Button
                             color="white"
                             bgColor='var(--main)'
@@ -172,7 +174,6 @@ const UpdateUser = ({ close, showClose }) => {
                 </div>
             </div>
         </div>
-    );
-};
+)}
 
 export default UpdateUser;

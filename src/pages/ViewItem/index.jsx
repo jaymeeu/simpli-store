@@ -16,7 +16,7 @@ const ViewItem = () => {
 
     const {id} = useParams();
 
-    const { sub } = useAuthContext()
+    const { sub,dbUser } = useAuthContext()
 
 
     const [item, setItem] = useState(null)
@@ -46,12 +46,12 @@ const ViewItem = () => {
 
       const addToCart = async () => {
         await DataStore.save(new Cart({ buyer_id : sub, quantity: 1, item_id: item.id }))
-            .then((res) => {
-                console.log(res, "resresres")
-            })
-            .catch((err) => {
-                console.log(err, "errerrerr")
-            })
+        .then((res) => {
+            console.log(res, "resresres")
+        })
+        .catch((err) => {
+            console.log(err, "errerrerr")
+        })
     }
 
     if(!item){
@@ -94,7 +94,6 @@ const ViewItem = () => {
                                     <AiOutlineStar size={20} />
                                     <AiOutlineStar size={20} />
                                     <span>(64 reviews)</span>
-
                                 </div>
                             </div>
                         </div>
@@ -103,13 +102,17 @@ const ViewItem = () => {
                                 <p>Added by</p>
                                 <h3>{seller?.storeName}</h3>
                             </div>
-                            <div className="action">
-                                <button type="button" onClick={addToCart}>Add to cart</button>
-                            </div>
+                            {
+                                dbUser?.role === 'seller' ?
+                                null
+                                :
+                                <div className="action">
+                                    <button type="button" onClick={addToCart}>Add to cart</button>
+                                </div>
+                            }
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     )

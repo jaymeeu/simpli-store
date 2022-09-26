@@ -11,6 +11,7 @@ import 'react-lazy-load-image-component/src/effects/blur.css';
 const Dashboard = () => {
 
   const { dbUser } = useAuthContext()
+  
   const [items_list, setItems_list] = useState(null)
   const navigate = useNavigate()
 
@@ -40,7 +41,6 @@ const Dashboard = () => {
       {
         dbUser === undefined && <UpdateUser
           showClose={false}
-        // close={refreshUserAfterUpdate}
         />
       }
       <div className="m-5 md:m-10 mt-24 p-1 md:p-10 bg-white rounded-3xl">

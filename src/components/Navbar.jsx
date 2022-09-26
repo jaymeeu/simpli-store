@@ -9,6 +9,7 @@ import UserProfile from '../components/UserProfile'
 
 import { useStateContext } from '../contexts/ContextProvider';
 import { useAuthContext } from '../contexts/AuthContext';
+import OrderComp from './OrderComp';
 
 const Navbar = () => {
   const  {dbUser} = useAuthContext()
@@ -62,7 +63,7 @@ const Navbar = () => {
                     <MdKeyboardArrowDown className="text-gray-400 text-14" />
                 </div>
 
-                {isClicked.cart && (<Cart />)}
+                {isClicked.cart && ( dbUser?.role === 'seller' ? <OrderComp/> : <Cart />)}
                 {isClicked.userProfile && (<UserProfile />)}
             </div>
         </div>
