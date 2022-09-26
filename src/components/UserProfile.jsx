@@ -3,10 +3,10 @@ import { MdOutlineCancel } from 'react-icons/md';
 
 import  Button  from './Button';
 import { useStateContext } from '../contexts/ContextProvider';
-import avatar from '../assets/avatar.webp';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../contexts/AuthContext';
 import { Auth} from 'aws-amplify'
+import { FaUserCircle } from 'react-icons/fa';
 
 const UserProfile = () => {
   const { handleClick } = useStateContext();
@@ -32,11 +32,8 @@ const UserProfile = () => {
         onClick={() => {handleClick('userProfile'); navigate('/profile') }}
         className="flex gap-5 items-center mt-6 border-color border-b-1 pb-6 cursor-pointer"
        >
-        <img
-          className="rounded-full h-24 w-24"
-          src={avatar}
-          alt="user-profile"
-        />
+         <FaUserCircle size={44} color="var(--main)"/>
+        
         <div>
           <p className="font-semibold text-xl dark:text-gray-200"> {dbUser?.name} </p>
           <p className="text-gray-500 text-sm dark:text-gray-400">  {dbUser?.role}   </p>
