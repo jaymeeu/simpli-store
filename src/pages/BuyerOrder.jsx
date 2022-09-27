@@ -40,7 +40,7 @@ const BuyerOrder = () => {
                         {
                             order_list.length === 0 ? 
                             <div className="font-medium text-xl text-slate-500 w-full h-40 flex justify-center items-center ">
-                                Cart is empty 😜🤔😜
+                                No order from you 😜🤔😜
                             </div>
                             :
                             order_list?.map((item, index) => (

@@ -26,14 +26,11 @@ const AuthContextProvider = ({ children }) => {
         DataStore.query(User, (user) => user.sub('eq', sub))
             .then((user) => {
                 setDbuser(user[0])
-                console.log(user[0], 'usersrsrsrs')
+                // console.log(user[0], 'usersrsrsrs')
             })
             // .finally(() => setchecking(false))
     }, [sub])
 
-    // const getFreshUser = () => {
-    //     setrefreshUser(!refreshUser)
-    // }
     return (
 
         <AuthContext.Provider

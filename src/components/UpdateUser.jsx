@@ -18,8 +18,7 @@ const UpdateUser = ({ close, showClose }) => {
 
     useEffect(() => {
         setEmail(authUser?.attributes?.email)
-
-        console.log(authUser,"authUser")
+        // console.log(authUser,"authUser")
     }, [authUser])
 
     // create new user

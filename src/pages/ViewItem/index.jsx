@@ -47,7 +47,8 @@ const ViewItem = () => {
       const addToCart = async () => {
         await DataStore.save(new Cart({ buyer_id : sub, quantity: 1, item_id: item.id }))
         .then((res) => {
-            console.log(res, "resresres")
+            // console.log(res, "resresres")
+            navigate('/cart')
         })
         .catch((err) => {
             console.log(err, "errerrerr")

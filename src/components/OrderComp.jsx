@@ -6,7 +6,7 @@ import Button from './Button';
 import OrdersItem from './OrdersItem';
 import { useAuthContext } from '../contexts/AuthContext';
 import { Order } from '../models';
-import {DataStore} from 'aws-amplify'
+import {DataStore, Storage} from 'aws-amplify'
 
 const OrderComp = () => {
   const { sub } = useAuthContext()
@@ -35,6 +35,9 @@ const OrderComp = () => {
 
   const { handleClick } = useStateContext();
 
+  if (!order_list) {
+    return <>Loading....</>
+}
   return (
     <div className="bg-half-transparent w-full fixed nav-item top-0 right-0 z-20">
       <div className="float-right h-screen  duration-1000 ease-in-out dark:text-gray-200 transition-all dark:bg-[#484B52] bg-white md:w-400 p-8">
@@ -50,11 +53,6 @@ const OrderComp = () => {
           />
         </div>
         {
-          !order_list ?
-            <div className="font-medium text-xl text-slate-500 w-full h-40 flex justify-center items-center ">
-              No order for you 😜🤔😜
-            </div>
-            :
             order_list.length === 0 ?
               <div className="font-medium text-xl text-slate-500 w-full h-40 flex justify-center items-center ">
                 No order for you 😜🤔😜

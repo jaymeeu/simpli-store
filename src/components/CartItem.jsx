@@ -48,7 +48,7 @@ const CartItem = ({ item, onsuccess }) => {
                 const todelete = await DataStore.query(Cart, item.cartID);
                 DataStore.delete(todelete)
                     .then(async (res) => {
-                        console.log(res, "delete response")
+                        // console.log(res, "delete response")
 
                         const itemToUpdate = await DataStore.query(Item, item.id);
                         DataStore.save(
@@ -56,7 +56,7 @@ const CartItem = ({ item, onsuccess }) => {
                                 update.quantity = parseInt(qty_available) - parseInt(qty)
                             }))
                             .then(async (res) => { 
-                                console.log(res, "update response")
+                                // console.log(res, "update response")
                                 onsuccess()
                             })
                             .catch((err) => {
@@ -78,9 +78,7 @@ const CartItem = ({ item, onsuccess }) => {
         <div className="flex items-center   leading-8 gap-5 border-b-1 border-color dark:border-gray-600 py-4">
             <img className="rounded-lg h-24 w-24" src={item.S3image} alt="" />
             <div className='sm:w-96 w-full'>
-                {
-                    console.log(item, "itemitem")
-                }
+               
                 <div className="flex space-x-2 justify-between items-center">
                     <p className="font-semibold ">{item.name}</p>
                     <p className="font-semibold text-sm">{qty_available}</p>

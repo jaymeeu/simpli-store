@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { MdOutlineCancel } from 'react-icons/md';
-
 import { useStateContext } from '../contexts/ContextProvider';
 import Button  from './Button';
 
-import CartItem from './CartItem';
 import { useAuthContext } from '../contexts/AuthContext';
-import {DataStore} from 'aws-amplify'
-import { Item } from '../models';
+import {DataStore, Storage} from 'aws-amplify'
+import { Item, Cart } from '../models';
 
-const Cart = () => {
+import CartItem from './CartItem';
+
+
+const Carts = () => {
   const { sub } = useAuthContext()
     const [cart_list, setCart_list] = useState(null)
     const [refresh, setrefresh] = useState(false)
@@ -19,38 +20,38 @@ const Cart = () => {
 
     const getAllItems = async () => {
 
-        //get all my items in cart table
-        const myCartItems =  (await DataStore.query(Cart, (item) => item.buyer_id('eq', sub))).sort((x, y) => new Date(y.createdAt) - new Date(x.createdAt))
+      //get all my items in cart table
+      const myCartItems =  (await DataStore.query(Cart, (item) => item.buyer_id('eq', sub))).sort((x, y) => new Date(y.createdAt) - new Date(x.createdAt))
 
-        //get cart items information from Item table and add cartid to each response
-        const fetchItems = await Promise.all(
-            JSON.parse(JSON.stringify(myCartItems))
-            .map(async cart => {
-                const eachQuery = await Promise.all(
-                    JSON.parse(JSON.stringify(
-                        await DataStore.query(Item, (item) => item.id('eq', cart.item_id))
-                    ))
-                )
-                eachQuery[0].cartID = cart.id;
 
-            return eachQuery[0]
-        }))
+      //get cart items information from Item table and add cartid to each response
+      const fetchItems = await Promise.all(
+          JSON.parse(JSON.stringify(myCartItems))
+          .map(async cart => {
+              const eachQuery = await Promise.all(
+                  JSON.parse(JSON.stringify(
+                      await DataStore.query(Item, (item) => item.id('eq', cart.item_id))
+                  ))
+              )
+              eachQuery[0].cartID = cart.id;
 
-        //get cart items image from s3 bucket
-        const fetchItemsImage = await Promise.all(
-            JSON.parse(JSON.stringify(fetchItems))
-            .map(async cart => {
-                const image = await Storage.get(cart.image)
-                cart.S3image = image
-            return cart
-        }))
+          return eachQuery[0]
+      }))
 
-        setCart_list(fetchItemsImage)
-    }
+      //get cart items image from s3 bucket
+      const fetchItemsImage = await Promise.all(
+          JSON.parse(JSON.stringify(fetchItems))
+          .map(async cart => {
+              const image = await Storage.get(cart.image)
+              cart.S3image = image
+          return cart
+      }))
+
+      setCart_list(fetchItemsImage)
+  }
 
     const { handleClick } = useStateContext();
-
-
+   
   return (
     <div className="bg-half-transparent w-full fixed nav-item top-0 right-0 z-20">
       <div className="float-right h-screen  duration-1000 ease-in-out dark:text-gray-200 transition-all dark:bg-[#484B52] bg-white md:w-400 p-8">
@@ -66,11 +67,6 @@ const Cart = () => {
           />
         </div>
         {
-            !cart_list ?
-            <div className="font-medium text-xl text-slate-500 w-full h-40 flex justify-center items-center ">
-                Loading... 😜🤔😜
-            </div>
-            :
             cart_list?.length === 0 ? 
             <div className="font-medium text-xl text-slate-500 w-full h-40 flex justify-center items-center ">
                 Cart is empty 😜🤔😜
@@ -87,4 +83,4 @@ const Cart = () => {
   );
 };
 
-export default Cart;
+export default Carts;
