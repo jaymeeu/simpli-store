@@ -67,7 +67,7 @@ const BuyerCart = () => {
                         :
                         cart_list?.map((item, index) => (
                             <div key={index}>
-                                <CartItem item={item} onsuccess={()=>setrefresh(!refresh)}/>
+                                <CartItem item={item} onsuccess={()=>{setrefresh(!refresh); }}/>
                             </div>
                         ))
 

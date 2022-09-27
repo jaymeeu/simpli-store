@@ -36,11 +36,11 @@ const BuyerOrder = () => {
 
             <div className="bg-white">
                 <div className="mx-auto max-w-2xl py-4 px-4 sm:py-6 sm:px-6 lg:max-w-7xl lg:px-8">
-                    <h2 className="text-2xl font-bold tracking-tight text-gray-900">Buyer cart</h2>
+                    <h2 className="text-2xl font-bold tracking-tight text-gray-900">Buyer orders</h2>
                         {
                             order_list.length === 0 ? 
                             <div className="font-medium text-xl text-slate-500 w-full h-40 flex justify-center items-center ">
-                                Cart is empty 😜🤔😜
+                                No order from you 😜🤔😜
                             </div>
                             :
                             order_list?.map((item, index) => (
