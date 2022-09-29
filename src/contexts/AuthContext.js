@@ -19,8 +19,10 @@ const AuthContextProvider = ({ children }) => {
     }, [])
 
     const checker = async () =>{
+        //get authenticated user information
         await Auth.currentAuthenticatedUser({ bypassCache: true }).then( async (res)=>{
             setauthUser(res)
+            //query user information from database
             await DataStore.query(User, (user) => user.sub('eq', res?.attributes?.sub))
                 .then((user) => {
                     setDbuser(user[0])
