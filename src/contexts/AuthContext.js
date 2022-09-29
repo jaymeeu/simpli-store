@@ -11,31 +11,27 @@ const AuthContext = createContext({});
 const AuthContextProvider = ({ children }) => {
     const [authUser, setauthUser] = useState(null)
     const [dbUser, setDbuser] = useState(null)
-    // const [checking, setchecking] = useState(false)
-    // const [refreshUser, setrefreshUser] = useState(false)
 
     const sub = authUser?.attributes?.sub
 
     useEffect(() => {
-        Auth.currentAuthenticatedUser({ bypassCache: true }).then(setauthUser)
+        checker()
     }, [])
 
-    useEffect(() => {
-        // setchecking(true)
-
-        DataStore.query(User, (user) => user.sub('eq', sub))
-            .then((user) => {
-                setDbuser(user[0])
-                // console.log(user[0], 'usersrsrsrs')
-            })
-            // .finally(() => setchecking(false))
-    }, [sub])
+    const checker = async () =>{
+        await Auth.currentAuthenticatedUser({ bypassCache: true }).then( async (res)=>{
+            setauthUser(res)
+            await DataStore.query(User, (user) => user.sub('eq', res?.attributes?.sub))
+                .then((user) => {
+                    setDbuser(user[0])
+                })
+        })
+    }
 
     return (
 
         <AuthContext.Provider
             value={{ authUser, dbUser, setDbuser, sub, 
-                // checking, getFreshUser 
             }}
         >
             {children}
